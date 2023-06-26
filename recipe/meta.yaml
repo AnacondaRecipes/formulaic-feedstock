@@ -10,26 +10,28 @@ source:
   sha256: 54905a297a40f6d8b23b94b6652d622ad4756a2b14fb83c0aa76473254d4dd7b
 
 build:
-  noarch: python
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vvv
+  skip: True  # [py<37]
 
 requirements:
   host:
-    - python >=3.7.2
+    - python
     - pip
-    - hatch
+    - hatchling
     - hatch-vcs
+    - setuptools
+    - wheel
   run:
-    - python >=3.7.2
+    - python
     - astor >=0.8
-    - cached_property
-    - graphlib-backport
-    - interface_meta >=1.2
+    - cached-property >=1.3.0  # [py<38]
+    - graphlib-backport >= 1.0.0  # [py<39]
+    - interface_meta >=1.2.0
     - numpy >=1.16.5
     - pandas >=1.0
     - scipy >=1.6
-    - typing-extensions >=4.2
+    - typing-extensions >=4.2.0
     - wrapt >=1.0
   run_constrained:
     - pyarrow >=1
@@ -38,6 +40,10 @@ requirements:
 test:
   imports:
     - formulaic
+  requires: 
+    - pip
+  commands: 
+    - pip check
 
 about:
   home: https://github.com/matthewwardrop/formulaic
